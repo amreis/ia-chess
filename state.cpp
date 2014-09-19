@@ -12,6 +12,9 @@ private:
 	char board[64];
 	enum Team { BLACK = -1, WHITE = 1 } ourTeam;
 	int myFirstRow;
+	
+	static int const dr[4];
+	static int const dc[4];
 	void setBoard(const char* board)
 	{
 		memcpy(this->board, board, 64);
@@ -70,13 +73,13 @@ public:
 					switch(board[pos])
 					{
 					case 'p':
-						generatePawnMoves(ii(pos/8, pos%8), moves);
+						//generatePawnMoves(ii(pos/8, pos%8), moves);
 						break;
 					case 'r':
-						generateRookMoves(ii(pos/8, pos%8), moves);
+						//generateRookMoves(ii(pos/8, pos%8), moves);
 						break;
 					case 'n':
-					
+						generateKnightMoves(ii(pos/8, pos%8), moves);
 						break;
 					}
 				}
@@ -223,7 +226,21 @@ public:
 		}			
 	}
 	
-
+	void generateKnightMoves(ii pos, vector<State>& moves)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			// Hehe.
+			for (int j = (i & 0xfffffffe); j <= (i | 0x00000001); ++j)
+			{
+				State s = this->copy();
+				int newR = pos.first + dr[i];
+				int newC = pos.second + dc[j];
+				if (s.move(pos, ii(newR, newC)))
+					moves.push_back(s);
+			}
+		}
+	}
 	void print()
 	{
 		for (int i = 7; i >= 0; --i)
@@ -238,9 +255,11 @@ public:
 
 };
 
+const int State::dr[4]  = { -2, 2, -1, 1 };
+const int State::dc[4]  = { -1, 1, -2, 2 };
 int main()
 {
-	State s("rnbqkbn.ppppp.p..............p.r....P.P.........PPPP.P..RNBQKBNR", 1);
+	State s("....................p.........n......r.........P................", 1);
 	vector<State> l = s.getChildrenStates();
 	for (vector<State>::iterator it = l.begin(); it != l.end(); ++it)
 	{
