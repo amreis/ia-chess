@@ -1,3 +1,5 @@
+#ifndef BOT_H
+#define BOT_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,8 +8,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h> 
-
-#include "bot.h"
 
 void error(const char *msg)
 {
@@ -42,7 +42,7 @@ struct ConnectAPI{
     struct sockaddr_in serv_addr;
     struct hostent *server;
     
-    ConnectAPI(int port, char* name)
+    ConnectAPI(int port, const char* name)
     {
         if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
             error("ERROR opening socket\n");
@@ -99,3 +99,5 @@ struct ConnectAPI{
 };
 
 
+
+#endif
