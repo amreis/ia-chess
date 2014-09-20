@@ -13,6 +13,6 @@ main: main.o state.o
 main.o: main.cpp
 	$(CC) $(FLAGS) -I$(INC_PATH) -c main.cpp
 state.o: state.cpp
-	$(CC) $(FLAGS) -I$(INC_PATH) -c state.cpp state.h
+	$(CC) $(FLAGS) -I$(INC_PATH) -c state.cpp
 clean:
 	rm -rf *.o main

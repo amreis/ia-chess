@@ -15,10 +15,10 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
     {
         return make_pair( node.eval(), node);
     }
-    
+
     int bestValue = INT_MIN;
     State bestState;
-    
+
     vector<State> children = node.getChildrenStates();
     if (playingAs*player > 0)
         reverse(children.begin(), children.end());
@@ -29,19 +29,19 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
         s.changeTeam();
         pair<int, State> r = negamax(s, depth-1, -beta, -alpha, -player);
         int val = -r.first;
+
         if (bestValue < val)
         {
             bestValue = val;
             bestState = s;
         }
         alpha = max(alpha, val);
-        
+
         if (alpha >= beta)
             break;
     }
     return make_pair(bestValue, bestState);
-    
-    
+
 }
 
 int main()
@@ -53,12 +53,12 @@ int main()
 
     while (true)
     {
-        
+
         ServerBoard b = bot.readMsg();
         State k(b.board, b.whiteMoves ? 1 : -1);
         playingAs = (b.whiteMoves ? 1 : -1);
         pair<int, State> p = negamax(k, START_DEPTH, INT_MIN, INT_MAX, 1);
-         
+
         int r1, c1, r2, c2;
         p.second.print();
         cout << endl;
