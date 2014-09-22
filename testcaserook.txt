@@ -1,8 +1,0 @@
-rnbqkbn.
-ppppp.p.
-........
-.....p.r
-....P.P.
-........
-PPPP.P..
-RNBQKBNR
