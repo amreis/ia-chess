@@ -4,14 +4,15 @@
 #include <algorithm>
 
 using namespace std;
-State sToMove;
-int bestTillNow = -1;
+int playingAs;
+// TODO Make START_DEPTH a parameter set by keyboard
 #define START_DEPTH 5
 
-int playingAs;
+// Negamax + Alpha-Beta pruning
+// TODO Order nodes!
 pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int player)
 {
-    if (depth == 0) // || node.terminal()
+    if (depth == 0 || node.isTerminal())
     {
         return make_pair( node.eval(), node);
     }
@@ -57,9 +58,12 @@ int main()
         ServerBoard b = bot.readMsg();
         State k(b.board, b.whiteMoves ? 1 : -1);
         playingAs = (b.whiteMoves ? 1 : -1);
-        pair<int, State> p = negamax(k, START_DEPTH, INT_MIN, INT_MAX, 1);
+        cout << "Received: " << endl;
+        k.print();
+        pair<int, State> p = negamax(k, START_DEPTH, -State::INF, State::INF, 1);
 
         int r1, c1, r2, c2;
+        cout << "Generated:" << endl;
         p.second.print();
         cout << endl;
         p.second.getLastMove(r1, c1, r2, c2);

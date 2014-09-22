@@ -21,38 +21,47 @@ private:
     char board[64];
     enum Team { BLACK = -1, WHITE = 1 } ourTeam;
     int myFirstRow;
-    
     static const int dr[4];
     static const int dc[4];
-    
+
     pair<ii,ii> lastMove;
     explicit State(Team);
     void setBoard(const char* board);
 public:
+    static const int INF;
+
     State();
-	explicit State(const char*, int);
-	bool remove_piece_at(ii pos);
+    explicit State(const char*, int);
+
 	State copy() const;
+
 	void changeTeam();
+
 	vector<State> getChildrenStates() const;
 	bool move(ii,ii);
-	
+
 	bool foundFriend(ii) const;
 	bool foundFoe(ii) const;
-	
+
 	void generatePawnMoves(ii, vector<State>&) const;
 	void generateRookMoves(ii, vector<State>&) const;
 	void generateKnightMoves(ii, vector<State>&) const;
-	
-	void print();
-	
+
+	void print() const;
+
     void setTeam(int);
-    
+
     int eval() const;
-    
+
     int getTeam() const;
     void getLastMove(int&,int&,int&,int&) const;
     pair<ii,ii> getLastMove() const;
+    const char* getBoard() const;
+
+    bool isTerminal() const;
+
+    State& operator=(const State& other);
+
 };
 
 #endif
