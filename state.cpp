@@ -450,5 +450,15 @@ State& State::operator=(const State& other)
 	return *this;
 }
 
+bool State::operator<(const State& other) const
+{
+    return (memcmp(this->getBoard(), other.getBoard(), 64) < 0);
+}
+
+bool State::operator==(const State& other) const
+{
+    return (memcmp(this->getBoard(), other.getBoard(), 64) == 0);
+}
+
 const char* State::getBoard() const
 { return this->board; }

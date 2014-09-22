@@ -1,5 +1,6 @@
 #include "state.h"
 #include "bot.h"
+#include "transp_table.h"
 #include <climits>
 #include <algorithm>
 
@@ -8,7 +9,7 @@ using namespace std;
 int playingAs;
 // Negamax + Alpha-Beta pruning
 // TODO Order nodes!
-// TODO Transposition Table!
+// TODO Transp Table is implemented. Now, needs to be used.
 pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int player)
 {
 	if (depth == 0 || node.isTerminal())
@@ -48,6 +49,7 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 
 int main()
 {
+    cout << sizeof(State) << endl;
 	cout << "Defina a profundidade da árvore de busca" << endl;
 	int DEPTH;
 	cin >> DEPTH;

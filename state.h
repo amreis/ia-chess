@@ -61,7 +61,8 @@ public:
 	bool isTerminal() const;
 
 	State& operator=(const State& other);
-
+    bool operator<(const State& other) const;
+    bool operator==(const State& other) const;
 };
 
 #endif
