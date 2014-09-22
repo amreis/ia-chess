@@ -201,11 +201,6 @@ vector<State> State::getChildrenStates() const
         }
     }
 
-    //#if __cplusplus > 199711L
-    //std::for_each(moves.begin(), moves.end(), [this] () { this->changeTeam(); });
-    //#else
-
-    //#endif
     return moves;
 }
 // Moves a piece from <f> to <t>. If any position is invalid or there is a friend
@@ -229,24 +224,26 @@ bool State::move(ii f, ii t)
 
 void State::generatePawnMoves(ii pos, vector<State>& moves) const
 {
-
-
-    if (!foundFriend(ii(pos.first+(int(ourTeam)), pos.second)) && !foundFoe(ii(pos.first + (int(ourTeam)), pos.second)))
+    // One step forward
+    ii movingTo = ii(pos.first+(int(ourTeam)), pos.second);
+    if (!foundFriend(movingTo) && !foundFoe(movingTo))
     {
         State s = this->copy();
-        if (s.move(pos, ii(pos.first + (int(ourTeam)), pos.second)))
+        if (s.move(pos, movingTo))
             moves.push_back(s);
+        // Two steps forward
         if (pos.first == myFirstRow)
         {
-            if (!foundFriend(ii(pos.first+(int(ourTeam)*2),pos.second)) && !foundFoe(ii(pos.first + (int(ourTeam)*2), pos.second)))
+            movingTo = ii(pos.first + (int(ourTeam) * 2), pos.second);
+            if (!foundFriend(movingTo) && !foundFoe(movingTo))
             {
                 State s = this->copy();
-                if (s.move(pos, ii(pos.first + (int(ourTeam)*2), pos.second)))
+                if (s.move(pos, movingTo))
                     moves.push_back(s);
             }
         }
     }
-
+    // Try to capture to the right
     if (foundFoe(ii(pos.first + (int(ourTeam)), pos.second + 1)))
     {
         State s = this->copy();
@@ -254,7 +251,7 @@ void State::generatePawnMoves(ii pos, vector<State>& moves) const
             moves.push_back(s);
 
     }
-
+    // Try to capture to the left
     if (foundFoe(ii(pos.first + (int(ourTeam)), pos.second - 1)))
     {
         State s = this->copy();

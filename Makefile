@@ -12,9 +12,6 @@ main: main.o state.o
 	$(CC) $(FLAGS) -I$(INC_PATH) -L$(LIB_PATH) $(LIBS) -o main main.o state.o bot.h
 .cpp.o:
 	$(CC) $(FLAGS) -I$(INC_PATH) -c $<
-#main.o: main.cpp
-#	$(CC) $(FLAGS) -I$(INC_PATH) -c main.cpp
-#state.o: state.cpp
-#	$(CC) $(FLAGS) -I$(INC_PATH) -c state.cpp
+
 clean:
 	rm -rf *.o main

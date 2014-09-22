@@ -18,20 +18,20 @@ typedef pair<int,int> ii;
 class State
 {
 private:
-    char board[64];
-    enum Team { BLACK = -1, WHITE = 1 } ourTeam;
-    int myFirstRow;
-    static const int dr[4];
-    static const int dc[4];
+	char board[64];
+	enum Team { BLACK = -1, WHITE = 1 } ourTeam;
+	int myFirstRow;
+	static const int dr[4];
+	static const int dc[4];
 
-    pair<ii,ii> lastMove;
-    explicit State(Team);
-    void setBoard(const char* board);
+	pair<ii,ii> lastMove;
+	explicit State(Team);
+	void setBoard(const char* board);
 public:
-    static const int INF;
+	static const int INF;
 
-    State();
-    explicit State(const char*, int);
+	State();
+	explicit State(const char*, int);
 
 	State copy() const;
 
@@ -49,18 +49,18 @@ public:
 
 	void print() const;
 
-    void setTeam(int);
+	void setTeam(int);
 
-    int eval() const;
+	int eval() const;
 
-    int getTeam() const;
-    void getLastMove(int&,int&,int&,int&) const;
-    pair<ii,ii> getLastMove() const;
-    const char* getBoard() const;
+	int getTeam() const;
+	void getLastMove(int&,int&,int&,int&) const;
+	pair<ii,ii> getLastMove() const;
+	const char* getBoard() const;
 
-    bool isTerminal() const;
+	bool isTerminal() const;
 
-    State& operator=(const State& other);
+	State& operator=(const State& other);
 
 };
 
