@@ -90,7 +90,7 @@ int State::eval() const
                     if (abs(i-myFirstRow) <= 3)
                     {
                         otherAdvancedPawns++;
-                        if (abs(i-myFirstRow) == 0) return INF;
+                        if (abs(i-myFirstRow) == 0) return -INF;
                     }
                     nOtherPawns++;
                     break;
@@ -106,7 +106,7 @@ int State::eval() const
                     {
                         myAdvancedPawns++;
                         if (abs(i-myFirstRow) == 6)
-                            return -INF;
+                            return INF;
                     }
                     break;
                 case 'R':
