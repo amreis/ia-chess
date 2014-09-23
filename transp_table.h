@@ -14,6 +14,7 @@ private:
 	int depth;
 	int score;
 public:
+	explicit TranspTableEntry();
 	explicit TranspTableEntry(EntryType, int, int);
 
 	EntryType getType() const;

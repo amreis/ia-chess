@@ -1,5 +1,11 @@
 #include "transp_table.h"
 
+TranspTableEntry::TranspTableEntry()
+	: type(EntryType::EXACT), depth(0), score(0)
+{
+
+}
+
 TranspTableEntry::TranspTableEntry(EntryType t, int d, int s)
 {
 	this->score = s;
