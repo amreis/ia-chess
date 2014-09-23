@@ -35,7 +35,7 @@ public:
 
 	bool lookup(const State& s, TranspTableEntry& out);
 	bool insert(const State& s, const TranspTableEntry& entry);
-
+	int size() const;
 };
 
 

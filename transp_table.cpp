@@ -49,3 +49,6 @@ bool TranspTable::insert(const State& state, const TranspTableEntry& entry)
 {
 	return this->_map.insert(make_pair(state, entry)).second;
 }
+
+int TranspTable::size() const
+{ return this->_map.size(); }

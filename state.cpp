@@ -399,7 +399,7 @@ bool State::isTerminal() const
 	{
 		for (int j = 0; j < 8; ++j)
 		{
-			if (tolower(board[i*8+j] == 'p')) return false;
+			if (tolower(board[i*8+j]) == 'p') return false;
 		}
 	}
 	// Else, it's game over.

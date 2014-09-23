@@ -108,6 +108,7 @@ int main()
 		cout << endl;
 		p.second.getLastMove(r1, c1, r2, c2);
 		bot.sendMove(r1,c1,r2,c2);
+		cout << "Transp table size: " << transp.size() << endl;
 	}
 	return 0;
 }

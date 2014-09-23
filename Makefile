@@ -7,6 +7,7 @@ LIBS=
 FLAGS=-Wall -std=c++11 -g
 OBJECTS=main.o state.o transp_table.o
 ADDITIONAL_HEADERS=bot.h
+
 all: main
 
 main: $(OBJECTS)
