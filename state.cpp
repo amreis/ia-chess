@@ -172,8 +172,7 @@ vector<State> State::getChildrenStates() const
 // there, returns false since the movement can't be made.
 bool State::move(ii f, ii t)
 {
-	if (f.first < 0 || f.first >= 8 || f.second < 0 || f.second >= 8
-		|| t.first < 0 || t.first >= 8 || t.second < 0 || t.second >= 8)
+	if (!isValidPosition(f) || !isValidPosition(t) || f == t)
 		return false;
 	if (foundFriend(t))
 		return false;
@@ -230,6 +229,7 @@ void State::generatePawnMoves(ii pos, vector<State>& moves) const
 // Function that determines if there is a FRIEND in some position of the board.
 bool State::foundFriend (ii pos) const
 {
+	if (!isValidPosition(pos)) return false;
 	if ((islower(board[pos.first*8 + pos.second]) && ourTeam == BLACK)
 		|| (isupper(board[pos.first*8+pos.second]) && ourTeam == WHITE))
 		return true;
@@ -241,6 +241,7 @@ bool State::foundFriend (ii pos) const
 // Function that determines if there is a FOE in some position of the board.
 bool State::foundFoe (ii pos) const
 {
+	if (!isValidPosition(pos)) return false;
 	if ((isupper(board[pos.first*8 + pos.second]) && ourTeam == BLACK)
 		|| (islower(board[pos.first*8+pos.second]) && ourTeam == WHITE))
 		return true;
@@ -249,7 +250,11 @@ bool State::foundFoe (ii pos) const
 
 }
 
-
+bool State::isValidPosition(ii pos) const
+{
+	return pos.first >= 0 && pos.first <= 7 && pos.second >= 0 &&
+		pos.second <= 7;
+}
 
 void State::generateRookMoves(ii pos, vector<State>& moves) const
 {

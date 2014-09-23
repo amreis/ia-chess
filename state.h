@@ -27,6 +27,7 @@ private:
 	pair<ii,ii> lastMove;
 	explicit State(Team);
 	void setBoard(const char* board);
+	bool isValidPosition(ii) const;
 public:
 	static const int INF;
 
