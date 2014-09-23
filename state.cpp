@@ -33,97 +33,62 @@ State::State(Team team) {
 #define ADV_PAWN_SCORE 20
 int State::eval() const
 {
-	int nMyPawns = 0, nMyRooks = 0, nMyKnights = 0;
-	int nOtherPawns = 0, nOtherRooks = 0, nOtherKnights = 0;
-	int myAdvancedPawns = 0;
-	int otherAdvancedPawns = 0;
+	int nWhiteP = 0, nWhiteR = 0, nWhiteN = 0;
+	int nBlackP = 0, nBlackR = 0, nBlackN = 0;
+	int nWhiteAP = 0, nBlackAP = 0;
+	bool blackWin = false, whiteWin = false;
 	for (int i = 0; i < 8; ++i)
 	{
 		for (int j = 0; j < 8; ++j)
 		{
-			char c = board[i*8 + j];
+			char c = board[i*8+j];
 			if (c == '.') continue;
-			if (ourTeam == BLACK)
+			switch(c)
 			{
-				#ifdef DEBUG
-				assert(myFirstRow == 6);
-				#endif
-				switch(c)
-				{
 				case 'p':
-					if (abs(i - myFirstRow) >= 5)
+					nBlackP++;
+					if (i - 6 <= -5)
 					{
-						myAdvancedPawns++;
-						if (abs(i-myFirstRow) == 6)
-							return INF;
+						nBlackAP++;
+						if (i == 0) { blackWin = true; }
 					}
-					nMyPawns++;
 					break;
 				case 'r':
-					nMyRooks++;
+					nBlackR++;
 					break;
 				case 'n':
-					nMyKnights++;
+					nBlackN++;
 					break;
 				case 'P':
-					if (abs(i-myFirstRow) <= 3)
+					nWhiteP++;
+					if (i - 1 >= 5)
 					{
-						otherAdvancedPawns++;
-						if (abs(i-myFirstRow) == 0) return -INF;
-					}
-					nOtherPawns++;
-					break;
-				case 'R':
-					nOtherRooks++;
-					break;
-				case 'N':
-					nOtherKnights++;
-				}
-			}
-			else if (ourTeam == WHITE)
-			{
-				#ifdef DEBUG
-				assert(myFirstRow == 1);
-				#endif
-				switch(c){
-				case 'p':
-					if (abs(i-myFirstRow) <= 3)
-					{
-						otherAdvancedPawns++;
-						if (abs(i-myFirstRow) == 0) return -INF;
-					}
-					nOtherPawns++;
-					break;
-				case 'r':
-					nOtherRooks++;
-					break;
-				case 'n':
-					nOtherKnights++;
-					break;
-				case 'P':
-					nMyPawns++;
-					if (abs(i - myFirstRow) >= 5)
-					{
-						myAdvancedPawns++;
-						if (abs(i-myFirstRow) == 6)
-							return INF;
+						nWhiteAP++;
+						if (i == 7) { whiteWin = true; }
 					}
 					break;
 				case 'R':
-					nMyRooks++;
+					nWhiteR++;
 					break;
 				case 'N':
-					nMyKnights++;
-				}
+					nWhiteN++;
+					break;
 			}
+			if (blackWin || whiteWin) break;
 		}
+		if (blackWin || whiteWin) break;
 	}
-	if (nMyPawns == 0) return -INF;
-	else if (nOtherPawns == 0) return INF;
-	return (PAWN_SCORE*(nMyPawns - nOtherPawns) +
-			ROOK_SCORE*(nMyRooks - nOtherRooks) +
-			KNIGHT_SCORE*(nMyKnights - nOtherKnights) +
-			ADV_PAWN_SCORE*(myAdvancedPawns - otherAdvancedPawns));
+	if (nWhiteP == 0) blackWin = true;
+	else if (nBlackP == 0) whiteWin = true;
+
+	if (blackWin)
+		return ((ourTeam == BLACK) ? INF : -INF);
+	else if (whiteWin)
+		return ((ourTeam == WHITE) ? INF : -INF);
+	return (PAWN_SCORE*(nWhiteP - nBlackP) +
+			ROOK_SCORE*(nWhiteR - nBlackR) +
+			KNIGHT_SCORE*(nWhiteN - nBlackN) +
+			ADV_PAWN_SCORE*(nWhiteAP - nBlackAP)) * int(ourTeam);
 }
 
 int State::getTeam() const
@@ -434,8 +399,7 @@ bool State::isTerminal() const
 	{
 		for (int j = 0; j < 8; ++j)
 		{
-			if (board[i*8+j] == 'p') return false;
-			else if (board[i*8+j] == 'P') return false;
+			if (tolower(board[i*8+j] == 'p')) return false;
 		}
 	}
 	// Else, it's game over.

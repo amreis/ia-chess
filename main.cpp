@@ -12,7 +12,6 @@ TranspTable transp;
 int playingAs;
 // Negamax + Alpha-Beta pruning
 // TODO Order nodes!
-// TODO Transp Table is implemented. Now, needs to be used.
 pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int player)
 {
 	TranspTableEntry e;
@@ -45,6 +44,8 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 	State bestState;
 
 	vector<State> children = node.getChildrenStates();
+	if (children.empty())
+		return make_pair( node.eval(), node);
 	std::sort(children.begin(), children.end(), State::_evalComparer);
 	// How do we order?
 	//  - Material advantage?
@@ -64,10 +65,6 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 		if (alpha >= beta)
 			break;
 	}
-	//for (State& s : children)
-	//{
-		
-	//}
 	TranspTableEntry newEntry;
 	newEntry.setScore(bestValue);
 	if (bestValue <= originalAlpha)
@@ -104,7 +101,7 @@ int main()
 		State k(b.board, b.whiteMoves ? 1 : -1);
 		playingAs = (b.whiteMoves ? 1 : -1);
 
-		pair<int, State> p = negamax(k, DEPTH, -State::INF, State::INF, 1);
+		pair<int, State> p = negamax(k, DEPTH, -State::INF, State::INF, playingAs);
 
 		int r1, c1, r2, c2;
 
