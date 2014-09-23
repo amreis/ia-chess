@@ -65,13 +65,11 @@ int main()
 		ServerBoard b = bot.readMsg();
 		State k(b.board, b.whiteMoves ? 1 : -1);
 		playingAs = (b.whiteMoves ? 1 : -1);
-		cout << "Received: " << endl;
-		k.print();
+
 		pair<int, State> p = negamax(k, DEPTH, -State::INF, State::INF, 1);
 
 		int r1, c1, r2, c2;
-		cout << "Generated:" << endl;
-		p.second.print();
+
 		cout << endl;
 		p.second.getLastMove(r1, c1, r2, c2);
 		bot.sendMove(r1,c1,r2,c2);
