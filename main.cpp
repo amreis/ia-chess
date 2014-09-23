@@ -3,8 +3,11 @@
 #include "transp_table.h"
 #include <climits>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
+
+TranspTable transp;
 
 int playingAs;
 // Negamax + Alpha-Beta pruning
@@ -12,6 +15,25 @@ int playingAs;
 // TODO Transp Table is implemented. Now, needs to be used.
 pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int player)
 {
+	TranspTableEntry e;
+	int originalAlpha = alpha;
+	if (transp.lookup(node, e) && e.getDepth() >= depth)
+	{
+		switch(e.getType())
+		{
+		case EntryType::EXACT:
+			return make_pair(e.getScore(), node);
+		break;
+		case EntryType::LOWER_BOUND:
+			alpha = max(alpha, e.getScore());
+		break;
+		case EntryType::UPPER_BOUND:
+			beta = min(beta, e.getScore());
+		break;
+		}
+		if (alpha >= beta)
+			return make_pair(e.getScore(), node);
+	}
 	if (depth == 0 || node.isTerminal())
 	{
 		// Eval needs to be relative to the side playing, or else we need to add
@@ -23,8 +45,7 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 	State bestState;
 
 	vector<State> children = node.getChildrenStates();
-	if (playingAs*player > 0)
-		reverse(children.begin(), children.end());
+	std::sort(children.begin(), children.end(), State::_evalComparer);
 	// How do we order?
 	//  - Material advantage?
 	for (State& s : children)
@@ -43,6 +64,23 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 		if (alpha >= beta)
 			break;
 	}
+	//for (State& s : children)
+	//{
+		
+	//}
+	TranspTableEntry newEntry;
+	newEntry.setScore(bestValue);
+	if (bestValue <= originalAlpha)
+	{
+		newEntry.setType(EntryType::UPPER_BOUND);
+	} else if (bestValue >= beta)
+	{
+		newEntry.setType(EntryType::LOWER_BOUND);
+	} else {
+		newEntry.setType(EntryType::EXACT);
+	}
+	newEntry.setDepth(depth);
+	transp.insert(node, newEntry);
 	return make_pair(bestValue, bestState);
 
 }

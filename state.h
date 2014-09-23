@@ -63,6 +63,22 @@ public:
 	State& operator=(const State& other);
     bool operator<(const State& other) const;
     bool operator==(const State& other) const;
+
+    static const struct
+    {
+    	bool operator()(const State& l, const State& r)
+    	{
+    		return r < l;
+    	}
+    } _reverseComparer;
+
+    static const struct
+    {
+    	bool operator()(const State& l, const State& r)
+    	{
+    		return r.eval() < l.eval();
+    	}
+    } _evalComparer;
 };
 
 #endif
