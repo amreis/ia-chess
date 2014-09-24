@@ -110,14 +110,14 @@ int State::eval() const
 			KNIGHT_SCORE*(nWhiteN - nBlackN) +
 			ADV_PAWN_SCORE*(nWhiteAP - nBlackAP)) * int(ourTeam);
 	*/
-
+	int opRook = ((ourTeam == BLACK) ? whiteOPRook : blackOPRook);
 	return (PAWN_SCORE*(nWhiteP - nBlackP - int(ourTeam)) +
 			ROOK_SCORE*(nWhiteR - nBlackR) +
 			KNIGHT_SCORE*(nWhiteN - nBlackN) +
 			ADV_PAWN_SCORE*(nWhiteAP - nBlackAP) +
 			2*(whiteCenter - blackCenter) +
 			-5*(whiteLP - blackLP) +
-			50*(whiteOPRook - blackOPRook)) * int(ourTeam);
+			-50*(opRook)) * int(ourTeam);
 }
 
 int State::getTeam() const
