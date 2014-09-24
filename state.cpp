@@ -28,7 +28,7 @@ State::State(Team team) {
 	this->lastMove = make_pair( ii(-1,-1), ii(-1,-1) );
 }
 #define PAWN_SCORE 10
-#define ROOK_SCORE 6
+#define ROOK_SCORE 10
 #define KNIGHT_SCORE 7
 #define ADV_PAWN_SCORE 25
 int State::eval() const
@@ -38,9 +38,10 @@ int State::eval() const
 	int nWhiteAP = 0, nBlackAP = 0;
 	bool blackWin = false, whiteWin = false;
 	const static int centerDominance[8] = {0, 1, 2, 5, 5, 2, 1, 0};
-	const static int advPawnWeight[] = {0,3,5,7,10,13,17};
+	const static int advPawnWeight[] = {0,3,6,7,10,13,17};
 	int whiteCenter = 0, blackCenter = 0;
 	int whiteLP = 0, blackLP = 0;
+	int whiteOPRook = 0, blackOPRook = 0;
 	for (int i = 0; i < 8; ++i)
 	{
 		for (int j = 0; j < 8; ++j)
@@ -62,6 +63,7 @@ int State::eval() const
 						blackLP++;
 					break;
 				case 'r':
+					if (i == 1) blackOPRook = 1;
 					blackCenter += centerDominance[j];
 					nBlackR++;
 					break;
@@ -82,6 +84,7 @@ int State::eval() const
 						whiteLP++;
 					break;
 				case 'R':
+					if (i == 6) whiteOPRook = 1;
 					whiteCenter += centerDominance[j];
 					nWhiteR++;
 					break;
@@ -113,7 +116,8 @@ int State::eval() const
 			KNIGHT_SCORE*(nWhiteN - nBlackN) +
 			ADV_PAWN_SCORE*(nWhiteAP - nBlackAP) +
 			2*(whiteCenter - blackCenter) +
-			-5*(whiteLP - blackLP)) * int(ourTeam);
+			-5*(whiteLP - blackLP) +
+			50*(whiteOPRook - blackOPRook)) * int(ourTeam);
 }
 
 int State::getTeam() const
