@@ -1,4 +1,5 @@
 #include "transp_table.h"
+#include <cstdio>
 
 TranspTableEntry::TranspTableEntry()
 	: type(EntryType::EXACT), depth(0), score(0)
@@ -52,3 +53,19 @@ bool TranspTable::insert(const State& state, const TranspTableEntry& entry)
 
 int TranspTable::size() const
 { return this->_map.size(); }
+
+// TODO TESTTTTTTTTTTTTTTTTTT
+void TranspTable::saveToFile() const
+{
+	FILE *arq;
+	fopen(arq, "transptable.bin", "wb");
+	
+	for (auto it = _map.begin(); it != map.end(); ++it)
+	{
+		pair<State, TranspTableEntry> p = *it;
+		fwrite(&p.first, sizeof(State), 1, arq);
+		fwrite(&p.second, sizeof(TranspTableEntry), 1, arq);
+	}
+	
+	fclose(arq);
+}

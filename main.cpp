@@ -98,6 +98,11 @@ int main()
 	{
 
 		ServerBoard b = bot.readMsg();
+		if (b.end)
+		{
+			transp.saveToFile();
+			continue;
+		}
 		State k(b.board, b.whiteMoves ? 1 : -1);
 		playingAs = (b.whiteMoves ? 1 : -1);
 
