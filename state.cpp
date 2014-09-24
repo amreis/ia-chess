@@ -38,7 +38,7 @@ int State::eval() const
 	int nWhiteAP = 0, nBlackAP = 0;
 	bool blackWin = false, whiteWin = false;
 	const static int centerDominance[8] = {0, 1, 2, 5, 5, 2, 1, 0};
-	const static int advPawnWeight[] = {0,3,6,7,10,13,17};
+	const static int advPawnWeight[] = {-2,0,3,7,10,13,17};
 	int whiteCenter = 0, blackCenter = 0;
 	int whiteLP = 0, blackLP = 0;
 	int whiteOPRook = 0, blackOPRook = 0;
@@ -450,12 +450,13 @@ State& State::operator=(const State& other)
 
 bool State::operator<(const State& other) const
 {
-    return (memcmp(this->getBoard(), other.getBoard(), 64) < 0);
+    return this->ourTeam < other.getTeam() ||
+		(!(this->ourTeam < other.getTeam()) && memcmp(this->getBoard(), other.getBoard(), 64) < 0);
 }
 
 bool State::operator==(const State& other) const
 {
-    return (memcmp(this->getBoard(), other.getBoard(), 64) == 0);
+    return (this->ourTeam == other.getTeam()) && (memcmp(this->getBoard(), other.getBoard(), 64) == 0);
 }
 
 const char* State::getBoard() const

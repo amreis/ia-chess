@@ -58,14 +58,29 @@ int TranspTable::size() const
 void TranspTable::saveToFile() const
 {
 	FILE *arq;
-	fopen(arq, "transptable.bin", "wb");
-	
-	for (auto it = _map.begin(); it != map.end(); ++it)
+	arq = fopen("transptable.bin", "wb");
+
+	for (auto it = _map.begin(); it != _map.end(); ++it)
 	{
 		pair<State, TranspTableEntry> p = *it;
 		fwrite(&p.first, sizeof(State), 1, arq);
 		fwrite(&p.second, sizeof(TranspTableEntry), 1, arq);
 	}
-	
+
 	fclose(arq);
+}
+
+void TranspTable::readFromFile()
+{
+	FILE *arq = fopen("transptable.bin", "rb");
+	if (arq == NULL) return;
+	while (!feof(arq))
+	{
+		State x;
+		TranspTableEntry y;
+		fread(&x, sizeof(State), 1, arq);
+		if (feof(arq)) break;
+		fread(&y, sizeof(TranspTableEntry), 1, arq);
+		this->insert(x,y);
+	}
 }

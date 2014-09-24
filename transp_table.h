@@ -24,6 +24,12 @@ public:
 	void setType(EntryType t);
 	void setDepth(int d);
 	void setScore(int s);
+
+	void print()
+	{
+		std::cout << "Entry: (type: " << type << ", depth: " << depth <<
+			", score: " << score << ")" << std::endl;
+	}
 };
 
 class TranspTable
@@ -36,6 +42,9 @@ public:
 	bool lookup(const State& s, TranspTableEntry& out);
 	bool insert(const State& s, const TranspTableEntry& entry);
 	int size() const;
+
+	void saveToFile() const;
+	void readFromFile();
 };
 
 

@@ -8,7 +8,7 @@
 using namespace std;
 
 TranspTable transp;
-
+typedef std::pair<int,int> ii;
 int playingAs;
 // Negamax + Alpha-Beta pruning
 // TODO Order nodes!
@@ -16,7 +16,8 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 {
 	TranspTableEntry e;
 	int originalAlpha = alpha;
-	if (transp.lookup(node, e) && e.getDepth() >= depth)
+	if (transp.lookup(node, e) && e.getDepth() >= depth &&
+		node.getLastMove() != pair<ii,ii>(ii(-1,-1), ii(-1,-1)))
 	{
 		switch(e.getType())
 		{
@@ -84,7 +85,7 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 
 int main()
 {
-    cout << sizeof(State) << endl;
+	transp.readFromFile();
 	cout << "Defina a profundidade da árvore de busca" << endl;
 	int DEPTH;
 	cin >> DEPTH;
