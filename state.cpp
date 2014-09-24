@@ -28,15 +28,19 @@ State::State(Team team) {
 	this->lastMove = make_pair( ii(-1,-1), ii(-1,-1) );
 }
 #define PAWN_SCORE 10
-#define ROOK_SCORE 8
-#define KNIGHT_SCORE 5
-#define ADV_PAWN_SCORE 20
+#define ROOK_SCORE 6
+#define KNIGHT_SCORE 7
+#define ADV_PAWN_SCORE 25
 int State::eval() const
 {
 	int nWhiteP = 0, nWhiteR = 0, nWhiteN = 0;
 	int nBlackP = 0, nBlackR = 0, nBlackN = 0;
 	int nWhiteAP = 0, nBlackAP = 0;
 	bool blackWin = false, whiteWin = false;
+	const static int centerDominance[8] = {0, 1, 2, 5, 5, 2, 1, 0};
+	const static int advPawnWeight[] = {0,3,5,7,10,13,17};
+	int whiteCenter = 0, blackCenter = 0;
+	int whiteLP = 0, blackLP = 0;
 	for (int i = 0; i < 8; ++i)
 	{
 		for (int j = 0; j < 8; ++j)
@@ -46,31 +50,43 @@ int State::eval() const
 			switch(c)
 			{
 				case 'p':
+					blackCenter += centerDominance[j];
 					nBlackP++;
-					if (i - 6 <= -5)
+					if (i <= 1)
 					{
-						nBlackAP++;
+						// nBlackAP++;
+						nBlackAP += advPawnWeight[6-i];
 						if (i == 0) { blackWin = true; }
 					}
+					else if (board[(i-1)*8 + j] != '.')
+						blackLP++;
 					break;
 				case 'r':
+					blackCenter += centerDominance[j];
 					nBlackR++;
 					break;
 				case 'n':
+					blackCenter += centerDominance[j];
 					nBlackN++;
 					break;
 				case 'P':
+					whiteCenter += centerDominance[j];
 					nWhiteP++;
-					if (i - 1 >= 5)
+					if (i >= 6)
 					{
-						nWhiteAP++;
+						//nWhiteAP++;
+						nWhiteAP += advPawnWeight[i-1];
 						if (i == 7) { whiteWin = true; }
 					}
+					else if (board[(i+1)*8 + j] != '.')
+						whiteLP++;
 					break;
 				case 'R':
+					whiteCenter += centerDominance[j];
 					nWhiteR++;
 					break;
 				case 'N':
+					whiteCenter += centerDominance[j];
 					nWhiteN++;
 					break;
 			}
@@ -85,10 +101,19 @@ int State::eval() const
 		return ((ourTeam == BLACK) ? INF : -INF);
 	else if (whiteWin)
 		return ((ourTeam == WHITE) ? INF : -INF);
+	/*
 	return (PAWN_SCORE*(nWhiteP - nBlackP) +
 			ROOK_SCORE*(nWhiteR - nBlackR) +
 			KNIGHT_SCORE*(nWhiteN - nBlackN) +
 			ADV_PAWN_SCORE*(nWhiteAP - nBlackAP)) * int(ourTeam);
+	*/
+
+	return (PAWN_SCORE*(nWhiteP - nBlackP - int(ourTeam)) +
+			ROOK_SCORE*(nWhiteR - nBlackR) +
+			KNIGHT_SCORE*(nWhiteN - nBlackN) +
+			ADV_PAWN_SCORE*(nWhiteAP - nBlackAP) +
+			2*(whiteCenter - blackCenter) +
+			-5*(whiteLP - blackLP)) * int(ourTeam);
 }
 
 int State::getTeam() const
@@ -249,7 +274,7 @@ bool State::foundFoe (ii pos) const
 		return false;
 
 }
-
+// Function that determines if a position (row,col) is inside the board.
 bool State::isValidPosition(ii pos) const
 {
 	return pos.first >= 0 && pos.first <= 7 && pos.second >= 0 &&
@@ -363,7 +388,7 @@ void State::generateKnightMoves(ii pos, vector<State>& moves) const
 		}
 	}
 }
-
+// Output the last move made in this board to the four variables.
 void State::getLastMove(int &fr, int &fc, int &tr, int &tc) const
 {
 	fr = lastMove.first.first;
