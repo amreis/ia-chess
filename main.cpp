@@ -4,6 +4,7 @@
 #include <climits>
 #include <algorithm>
 #include <queue>
+#include <chrono>
 
 using namespace std;
 
@@ -99,6 +100,7 @@ int main()
 	{
 
 		ServerBoard b = bot.readMsg();
+		auto start = std::chrono::system_clock::now();
 		if (b.end)
 		{
 			transp.saveToFile();
@@ -106,9 +108,17 @@ int main()
 		}
 		State k(b.board, b.whiteMoves ? 1 : -1);
 		playingAs = (b.whiteMoves ? 1 : -1);
-
-		pair<int, State> p = negamax(k, DEPTH, -State::INF, State::INF, playingAs);
-
+		int d = 4;
+		pair<int,State> p;
+		for (auto t = std::chrono::system_clock::now();
+			std::chrono::duration_cast<std::chrono::milliseconds>
+				(std::chrono::system_clock::now() - start).count() <= 5000;
+			t = std::chrono::system_clock::now())
+		{
+			if (d > DEPTH) break;
+			p = negamax(k, d++, -State::INF, State::INF, playingAs);
+		}
+		cout << "Got to depth " << d << endl;
 		int r1, c1, r2, c2;
 
 		cout << endl;
