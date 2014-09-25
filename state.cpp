@@ -59,7 +59,11 @@ int State::eval() const
 						nBlackAP += advPawnWeight[6-i];
 						if (i == 0) { blackWin = true; }
 					}
-					else if (board[(i-1)*8 + j] != '.')
+					else if (board[(i-1)*8 + j] != '.' &&
+							!(
+								(j > 0 && isupper(board[(i-1)*8 + j - 1])) ||
+								(j < 7 && isupper(board[(i-1)*8 + j + 1]))
+							))
 						blackLP++;
 					break;
 				case 'r':
@@ -80,7 +84,11 @@ int State::eval() const
 						nWhiteAP += advPawnWeight[i-1];
 						if (i == 7) { whiteWin = true; }
 					}
-					else if (board[(i+1)*8 + j] != '.')
+					else if (board[(i+1)*8 + j] != '.' &&
+							!(
+								(j > 0 && islower(board[(i-1)*8 + j - 1])) ||
+								(j < 7 && islower(board[(i-1)*8 + j + 1]))
+							))
 						whiteLP++;
 					break;
 				case 'R':
