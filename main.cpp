@@ -86,7 +86,6 @@ pair<int, State> negamax(const State& node, int depth, int alpha, int beta, int 
 
 int main()
 {
-	transp.readFromFile();
 	cout << "Defina a profundidade da árvore de busca" << endl;
 	int DEPTH;
 	cin >> DEPTH;
@@ -102,10 +101,7 @@ int main()
 		ServerBoard b = bot.readMsg();
 		auto start = std::chrono::system_clock::now();
 		if (b.end)
-		{
-			transp.saveToFile();
 			continue;
-		}
 		State k(b.board, b.whiteMoves ? 1 : -1);
 		playingAs = (b.whiteMoves ? 1 : -1);
 		int d = 4;

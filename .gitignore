@@ -2,3 +2,5 @@
 *.o
 *.gch
 *.bin
+main
+main_32
